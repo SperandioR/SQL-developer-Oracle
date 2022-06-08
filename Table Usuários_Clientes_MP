@@ -1,0 +1,119 @@
+create table Usuários(
+nome char(40) unique not null,
+departamento char(30),
+tipo char(13),
+login char(30) unique not null,
+senha varchar(30) not null,
+altsenha int
+);
+create table login(
+	login char(30) not null,
+	data char(10) not null,
+	horaentrada char(8) not null,
+	horasaida char(8) not null,
+	constraint fklogin foreign key (login)
+		references Usuários(login)
+);
+
+insert into usuarios(nome, tipo, login, senha,altsenha) values('administrador', 'ADMINISTRADOR', 'admin','admin','0');
+
+
+create table clientes
+(
+  cnpj varchar(30) primary key not null,
+  inscest varchar(15) unique not null,
+  nome_emp varchar(40) not null,
+  nome_fant varchar(40) not null,
+  cont varchar(40),
+  tel varchar(30),
+  cel varchar(30),
+  email varchar(50),
+  data_fund varchar(20),
+  lograd varchar(50) not null,
+  numero int not null,
+  complemento varchar(30),
+  bairro varchar(30) not null,
+  cidade varchar(20) not null,
+  cep varchar(10),
+  uf varchar(2) not null
+);
+
+create table fornecedor(
+    cnpj varchar(20) primary key not null,
+    insc_est varchar(20) unique,
+    razao_soc char(40) unique,
+    nome_fant char(40) unique,
+    logradouro char(50) not null,
+    numero int not null,
+    complemento char(30),
+    bairro char(30) not null,
+    cep varchar(10),
+    uf char(2)not null,
+    cidade char(40) not null,
+    nome char(40) not null,
+    tel varchar(15),
+    cel varchar(15),
+    email varchar(50),    
+    site varchar(50)
+
+);
+
+create table materiaprima
+(
+codigo int primary key not null,
+data char(10),
+descricao char(40) not null,
+composicao char(40) not null,
+quantidade int,
+valor_unit numeric(8,2),
+valor_total numeric(8,2),
+cnpj_fornec varchar(20),
+constraint fkcnpj foreign key(cnpj_fornec)
+	references fornecedor(cnpj)
+);
+create table produto(
+	codigo int primary key not null,
+	descricao varchar(50) not null,
+	data varchar(10) not null,	
+	img varchar(100)	
+);
+create table dadosmp(
+	codigomp int not null,
+	consmp numeric(8,2) not null,
+	totalmp numeric(8,2) not null,
+	codp int not null,
+	constraint fkcodprod foreign key(codp)
+	references produto(codigo),
+	constraint fkcodmp foreign key(codigomp)
+	references materiaprima(codigo)
+);
+
+create table fichacusto(
+	custod numeric(8,2) not null,
+	maoobra numeric(8,2) not null,
+	precocusto numeric(8,2) not null,
+	tributos numeric(8,2) not null,
+	fretecom numeric(8,2) not null,
+	custofin numeric(8,2) not null,
+	margemlucro numeric(8,2) not null,
+	precovenda numeric(8,2) not null,
+	precovj numeric(8,2) not null,
+	codigop int not null,
+	constraint fkcodp foreign key(codigop)
+	references produto(codigo)
+);
+
+====== Codigo Select ===================================================
+
+select * from dadosmp;
+select * from materiaprima;
+select * from produto;
+
+select SUM(totalmp) from dadosmp where codp = 1
+
+================================================================
+select * from dadosmp;
+select * from materiaprima;
+select * from produto;
+
+select m.codigo,m.composicao,m.descricao,m.valor,d.consmp,d.totalmp from dadosmp d inner join materiaprima m on d.codp = 2 and d.codigomp = m.codigo
